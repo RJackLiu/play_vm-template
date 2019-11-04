@@ -1,0 +1,49 @@
+- block:
+  - name: Register as user with password and subscribe to a specific pool by ID
+    redhat_subscription:
+      state: present
+      username: "{{ rhsm_username }}"
+      password: "{{ rhsm_password }}"
+      pool_ids: "8a85f99c6901e22401692b9891ea4ffe"
+
+  - name: Disable all RHSM repositories
+    rhsm_repository:
+      name: '*'
+      state: disabled
+
+  - name: Enable all repositories starting with RHEL7
+    rhsm_repository:
+      name: "{{ item }}"
+      state: enabled
+    loop: "{{ rhsm_repo_7 }}"
+    when:
+    - ansible_distribution_major_version == '7'
+
+  - name: Enable all repositories starting with RHEL8
+    rhsm_repository:
+      name: "{{ item }}"
+      state: enabled
+    loop: "{{ rhsm_repo_8 }}"
+    when:
+    - ansible_distribution_major_version == '8'
+
+  - name: upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+
+  - name: Install a list of packages
+    yum:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ yum_list }}"
+    register: yum_installed
+
+
+  - debug:
+      msg:
+      - "{{ yum_installed }}"
+
+  tags: installBasic
+  when:
+  - ansible_distribution == 'RedHat'

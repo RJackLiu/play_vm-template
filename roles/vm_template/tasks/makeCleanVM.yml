@@ -1,0 +1,49 @@
+- block:
+  - name: make clean template
+    script: clearVM.sh
+    register: make_clean_template
+
+  - name: Poweroff host on rhel7
+    shell: |
+      yum history new
+      sleep 2
+      > '/root/.bash_history'
+      history -c
+      rm -rf /etc/ssh/ssh_host_*
+      sleep 2 && poweroff
+    async: 1
+    poll: 0
+    ignore_errors: yes
+    register: power_off
+    when:
+    - ansible_distribution_major_version == '7'
+
+  - name: Poweroff host on rhel8
+    shell: |
+      rm -rf /var/lib/dnf/*
+      dnf history
+      sleep 2
+      > '/root/.bash_history'
+      history -c
+      rm -rf /etc/ssh/ssh_host_*
+      sleep 2 && poweroff
+    async: 1
+    poll: 0
+    ignore_errors: yes
+    register: power_off
+    when:
+    - ansible_distribution_major_version == '8'
+
+  - name: Interval before next task
+    become: no
+    pause:
+      seconds: 30
+
+  - debug:
+      msg:
+      - "{{ make_clean_template }}"
+      - "{{ power_off }}"
+
+  tags: clearVM
+  when:
+  - ansible_distribution == 'RedHat'

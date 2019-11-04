@@ -1,0 +1,37 @@
+---
+# vars file for vm_template
+rhsm_username: ""
+rhsm_password: ""
+rhsm_poolID: ""
+
+rhsm_repo_7:
+#- rhel-server-rhscl-7-rpms
+#- rhel-7-server-insights-3-rpms
+#- rhel-7-server-satellite-tools-6.5-rpms
+#- rhel-7-server-extras-source-rpms
+#- rhel-7-server-optional-rpms
+#- rhel-ha-for-rhel-7-server-rpms
+#- rhel-rs-for-rhel-7-server-rpms
+- rhel-7-server-rpms
+
+rhsm_repo_8:
+- rhel-8-for-x86_64-baseos-rpms
+- rhel-8-for-x86_64-appstream-rpms
+
+yum_list:
+- bash-completion
+- net-tools
+- sysstat
+- tcpdump
+- iperf3
+- nmap
+- iscsi-initiator-utils
+- gdisk
+- git
+- nfs-utils
+- wget
+- ipa-client
+- setools-console
+- setroubleshoot-server
+- initial-setup
+

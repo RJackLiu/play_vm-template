@@ -1,0 +1,10 @@
+---
+# tasks file for vm_template
+- include_tasks: installBasicPackage.yml
+  tags:
+  - installBasic
+
+- include_tasks: makeCleanVM.yml
+  tags:
+  - clearVM
+
